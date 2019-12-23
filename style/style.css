@@ -119,3 +119,11 @@ main {
     right: 1rem;
     padding: 0.5rem 3rem;
 }
+
+.head-sort {
+    cursor: pointer;
+}
+
+.head-sort:hover{
+    background-color: rgb(107, 106, 107) !important;
+}

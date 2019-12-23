@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const ordersTable = document.getElementById('orders');
     const modalOrder = document.getElementById('order_read');
     const modalOrderActive = document.getElementById('order_active'); 
+    const headTable = document.getElementById('headTable')
     const orders = JSON.parse(localStorage.getItem('freeOrders')) || [];
 
     const toStorage = () => {
@@ -20,19 +21,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const declOfNum = (number, titles) => number + ' ' + titles[(number % 100 > 4 && number % 100 < 20) ?
          2 : [2, 0, 1, 1, 1, 2][(number % 10 < 5) ? number % 10 : 5]];
 
-    const calcDeadline = (data) => {
-        const deadline = new Date(data);
+    const calcDeadline = (date) => {
+        const deadline = new Date(date);
         const toDay = Date.now();
-        
         const remaining = (deadline - toDay) / 1000 / 60 / 60;
-
-        if(remaining / 24 > 2){
-        return declOfNum(Math.floor(remaining), ['день', 'дня', 'дней']);
+        if (remaining / 24 > 2){
+        return declOfNum(Math.floor(remaining / 24), ['день', 'дня', 'дней']);
     }
     return  declOfNum(Math.floor(remaining), ['час', 'часа', 'часов'])
-
-
-}
+    };
 
     const renderOrders = () => {
 
@@ -110,6 +107,31 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.style.display = 'flex';
         modal.addEventListener('click', handlerModal)
     };
+
+    const sortOrder = (arr, property) => {
+        arr.sort((a, b) => a[property] > b[property] ? 1 : -1)
+    };
+
+    headTable.addEventListener('click', (event) => {
+        const target = event.target;
+
+        if(target.classList.contains('head-sort')){
+            if(target.id === 'taskSort'){
+                sortOrder(orders, 'title');
+            }
+
+            if(target.id === 'currencySort'){
+                sortOrder(orders, 'currency');
+            }
+
+            if(target.id === 'deadlineSort'){
+                sortOrder(orders, 'deadline');
+            }
+            toStorage();
+            renderOrders();
+        }
+    });
+
 
     ordersTable.addEventListener('click', (event) => {
         const target = event.target;
